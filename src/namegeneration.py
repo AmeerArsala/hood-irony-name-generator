@@ -65,6 +65,7 @@ class NameGenerator(tf.keras.Model):
                                          encoding="utf-8")
 
         self.vocab = self.chars_to_ids.get_vocabulary()  # Doing this so unknown tokens can be set too
+        print(f"Vocabulary: {self.vocab}")
 
         self.ids_to_chars = StringLookup(vocabulary=self.vocab, invert=True,
                                          output_mode="int", mask_token=None, oov_token=OOV_TOKEN,
@@ -78,7 +79,6 @@ class NameGenerator(tf.keras.Model):
         corpus_texts_chars = tf.strings.unicode_split(corpus_texts, input_encoding="UTF-8")  # shape: (m, Tx)
         corpus = Corpus(corpus_texts, corpus_tensor=self.chars_to_ids(corpus_texts_chars))   # shape: (m, Tx)
         
-        print(f"Vocabulary: {self.vocab}")
         print(f"Corpus ID Tensor Shape: {corpus.corpus_tensor.shape}")
         #print(f"Corpus ID Tensor: {corpus.corpus_tensor}")
         print(f"Corpus ID tf.Dataset: {corpus.corpus_dataset}")
@@ -182,7 +182,11 @@ class NameGenerator(tf.keras.Model):
         generated_strings = []
         for batch_chars_tensor in result.value.T:  # join chars for each batch
             generated_string = tf.strings.join(batch_chars_tensor.tolist()).numpy().decode("utf-8")
-            generated_string = generated_string[0:generated_string.index(EOS_TOKEN)+1]  # clip to and keep EOS; it will be truncated afterwards during detokenization
+            
+            try:
+                generated_string = generated_string[0:generated_string.index(EOS_TOKEN)+1]  # clip to and keep EOS; it will be truncated afterwards during detokenization
+            except:  # if eos token not found
+                pass
             
             generated_strings.append(generated_string)
         

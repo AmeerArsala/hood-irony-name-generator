@@ -1,9 +1,9 @@
 from roman_numeral_formatting import roman_to_integer, integer_to_roman
 
 
-SOS_TOKEN = ">"     # Start of Sentence Token
-EOS_TOKEN = "#"     # End of Sentence Token
-OOV_TOKEN = "?"     # Out of Vocabulary Token
+SOS_TOKEN = "<SOS>"     # Start of Sentence Token
+EOS_TOKEN = "<EOS>"     # End of Sentence Token
+OOV_TOKEN = "<UNK>"     # Out of Vocabulary Token
 NOTHING_TOKEN = ""  # Literally nothing 
 
 
